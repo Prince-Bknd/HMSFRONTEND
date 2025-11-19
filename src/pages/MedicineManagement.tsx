@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import {
   Package,
   Plus,
@@ -343,29 +344,28 @@ export default function MedicineManagement() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <Label>Medicine</Label>
-                <select
-                  className="w-full p-2 border rounded-md"
-                  value={formData.medicineId}
-                  onChange={(e) => {
-                    const med = medicines.find((m) => m.id.toString() === e.target.value);
-                    setSelectedMedicine(med || null);
-                    setFormData({
-                      ...formData,
-                      medicineId: e.target.value,
-                      price: med?.price.toString() || "",
-                    });
-                  }}
-                >
-                  <option value="">Select a medicine</option>
-                  {medicines.map((med) => (
-                    <option key={med.id} value={med.id}>
-                      {med.name} - ${med.price}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                    <div>
+                      <Label>Medicine</Label>
+                      <Select
+                        value={formData.medicineId}
+                        onChange={(e) => {
+                          const med = medicines.find((m) => m.id.toString() === e.target.value);
+                          setSelectedMedicine(med || null);
+                          setFormData({
+                            ...formData,
+                            medicineId: e.target.value,
+                            price: med?.price.toString() || "",
+                          });
+                        }}
+                      >
+                        <option value="">Select a medicine</option>
+                        {medicines.map((med) => (
+                          <option key={med.id} value={med.id}>
+                            {med.name} - ${med.price}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
               <div>
                 <Label>Price *</Label>
                 <Input

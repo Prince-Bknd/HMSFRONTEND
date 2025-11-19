@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Calendar, Plus, Trash2, Clock, X, AlertTriangle } from "lucide-react";
 
 interface Schedule {
@@ -265,21 +266,20 @@ export default function ScheduleManagement() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <Label>Day of Week *</Label>
-                <select
-                  className="w-full p-2 border rounded-md"
-                  value={formData.dayOfWeek}
-                  onChange={(e) => setFormData({ ...formData, dayOfWeek: e.target.value })}
-                >
-                  <option value="">Select day</option>
-                  {DAYS.map((day, index) => (
-                    <option key={index} value={index}>
-                      {day}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                    <div>
+                      <Label>Day of Week *</Label>
+                      <Select
+                        value={formData.dayOfWeek}
+                        onChange={(e) => setFormData({ ...formData, dayOfWeek: e.target.value })}
+                      >
+                        <option value="">Select day</option>
+                        {DAYS.map((day, index) => (
+                          <option key={index} value={index}>
+                            {day}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
               <div>
                 <Label>Start Time *</Label>
                 <Input

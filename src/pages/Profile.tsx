@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { User, Save, Building2, GraduationCap, Heart } from "lucide-react";
 
 interface ProfileData {
@@ -112,8 +114,7 @@ export default function Profile() {
               </div>
               <div>
                 <Label>Gender</Label>
-                <select
-                  className="w-full p-2 border rounded-md"
+                <Select
                   value={formData.gender || ""}
                   onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 >
@@ -121,7 +122,7 @@ export default function Profile() {
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
-                </select>
+                </Select>
               </div>
               <div>
                 <Label>Address</Label>
@@ -165,8 +166,8 @@ export default function Profile() {
               </div>
               <div>
                 <Label>Bio</Label>
-                <textarea
-                  className="w-full p-2 border rounded-md min-h-[100px]"
+                <Textarea
+                  className="min-h-[100px]"
                   value={formData.bio || ""}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                   placeholder="Tell us about yourself..."
@@ -229,8 +230,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <Label>Education</Label>
-                  <textarea
-                    className="w-full p-2 border rounded-md min-h-[80px]"
+                  <Textarea
+                    className="min-h-[80px]"
                     value={formData.education || ""}
                     onChange={(e) => setFormData({ ...formData, education: e.target.value })}
                     placeholder="Educational background"
@@ -238,8 +239,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <Label>Certifications</Label>
-                  <textarea
-                    className="w-full p-2 border rounded-md min-h-[80px]"
+                  <Textarea
+                    className="min-h-[80px]"
                     value={formData.certifications || ""}
                     onChange={(e) => setFormData({ ...formData, certifications: e.target.value })}
                     placeholder="Professional certifications"
@@ -260,8 +261,7 @@ export default function Profile() {
               <CardContent className="space-y-4">
                 <div>
                   <Label>Blood Group</Label>
-                  <select
-                    className="w-full p-2 border rounded-md"
+                  <Select
                     value={formData.bloodGroup || ""}
                     onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
                   >
@@ -274,12 +274,12 @@ export default function Profile() {
                     <option value="AB-">AB-</option>
                     <option value="O+">O+</option>
                     <option value="O-">O-</option>
-                  </select>
+                  </Select>
                 </div>
                 <div>
                   <Label>Allergies</Label>
-                  <textarea
-                    className="w-full p-2 border rounded-md min-h-[80px]"
+                  <Textarea
+                    className="min-h-[80px]"
                     value={formData.allergies || ""}
                     onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
                     placeholder="List any allergies"
@@ -287,8 +287,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <Label>Medical History</Label>
-                  <textarea
-                    className="w-full p-2 border rounded-md min-h-[80px]"
+                  <Textarea
+                    className="min-h-[80px]"
                     value={formData.medicalHistory || ""}
                     onChange={(e) => setFormData({ ...formData, medicalHistory: e.target.value })}
                     placeholder="Previous medical conditions, surgeries, etc."
@@ -353,8 +353,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <Label>Company Address</Label>
-                  <textarea
-                    className="w-full p-2 border rounded-md min-h-[80px]"
+                  <Textarea
+                    className="min-h-[80px]"
                     value={formData.companyAddress || ""}
                     onChange={(e) => setFormData({ ...formData, companyAddress: e.target.value })}
                   />

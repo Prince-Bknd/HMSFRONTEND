@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Calendar, Clock, User, Search, CheckCircle2 } from "lucide-react";
 
 interface Doctor {
@@ -145,8 +146,7 @@ export default function AppointmentBooking() {
           <CardContent className="space-y-4">
             <div>
               <Label>Select Doctor</Label>
-              <select
-                className="w-full p-2 border rounded-md"
+              <Select
                 value={selectedDoctor?.id || ""}
                 onChange={(e) => {
                   const doctor = doctors.find((d) => d.id === e.target.value);
@@ -161,7 +161,7 @@ export default function AppointmentBooking() {
                     {doctor.name} ({doctor.email})
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {selectedDoctor && (
@@ -210,8 +210,7 @@ export default function AppointmentBooking() {
                   <>
                     <div>
                       <Label>Appointment Type</Label>
-                      <select
-                        className="w-full p-2 border rounded-md"
+                      <Select
                         value={formData.appointmentType}
                         onChange={(e) =>
                           setFormData({ ...formData, appointmentType: e.target.value })
@@ -221,7 +220,7 @@ export default function AppointmentBooking() {
                         <option value="Follow-up">Follow-up</option>
                         <option value="Emergency">Emergency</option>
                         <option value="Consultation">Consultation</option>
-                      </select>
+                      </Select>
                     </div>
                     <div>
                       <Label>Reason (Optional)</Label>
