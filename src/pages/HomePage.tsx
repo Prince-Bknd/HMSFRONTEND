@@ -87,7 +87,11 @@ export default function HomePage() {
       
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between relative z-10 animate-fade-in">
-        <div className="flex items-center space-x-2 group cursor-pointer">
+        <div 
+          className="flex items-center space-x-2 group cursor-pointer"
+          onClick={() => navigate("/")}
+          title="Go to Home"
+        >
           <div className="bg-primary p-2 rounded-lg transition-transform group-hover:scale-110 group-hover:rotate-12">
             <Stethoscope className="h-6 w-6 text-primary-foreground" />
           </div>

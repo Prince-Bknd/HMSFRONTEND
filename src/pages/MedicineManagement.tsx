@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/redux/store/hooks";
 import api from "@/utils/api";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import {
   X,
   Save,
   AlertCircle,
+  AlertTriangle,
 } from "lucide-react";
 
 interface Medicine {
@@ -40,6 +42,7 @@ interface MedicineMapping {
 }
 
 export default function MedicineManagement() {
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
   const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [mappings, setMappings] = useState<MedicineMapping[]>([]);
@@ -48,6 +51,7 @@ export default function MedicineManagement() {
   const [showMapModal, setShowMapModal] = useState(false);
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
   const [loading, setLoading] = useState(false);
+  const [profileCompletion, setProfileCompletion] = useState<number>(0);
   const [formData, setFormData] = useState({
     medicineId: "",
     price: "",
@@ -55,9 +59,20 @@ export default function MedicineManagement() {
   });
 
   useEffect(() => {
+    checkProfileCompletion();
     loadMedicines();
     loadMappings();
   }, []);
+
+  const checkProfileCompletion = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await api.get(`/profiles/user/${user.id}/completion`);
+      setProfileCompletion(response.data.completion || 0);
+    } catch (error) {
+      setProfileCompletion(0);
+    }
+  };
 
   const loadMedicines = async () => {
     try {
@@ -81,6 +96,15 @@ export default function MedicineManagement() {
   };
 
   const handleMapMedicine = async () => {
+    if (profileCompletion < 70) {
+      toast.error("Please complete your profile first (at least 70%)", {
+        description: "You need to fill your profile information before adding medicines.",
+        duration: 5000,
+      });
+      navigate("/profile");
+      return;
+    }
+
     if (!formData.medicineId || !formData.price) {
       toast.error("Please fill all required fields");
       return;
@@ -129,12 +153,51 @@ export default function MedicineManagement() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {profileCompletion < 70 && (
+        <Card className="mb-6 border-orange-200 dark:border-orange-900 bg-orange-50/50 dark:bg-orange-900/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">
+                  Profile Incomplete
+                </h3>
+                <p className="text-sm text-orange-800 dark:text-orange-200 mb-3">
+                  Your profile is only {profileCompletion}% complete. Please complete at least 70% of your profile to add medicines.
+                </p>
+                <Button 
+                  onClick={() => navigate("/profile")}
+                  variant="outline"
+                  size="sm"
+                  className="border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-900/30"
+                >
+                  Complete Profile
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Medicine Management</h1>
           <p className="text-muted-foreground">Manage your pharmaceutical inventory</p>
         </div>
-        <Button onClick={() => setShowMapModal(true)}>
+        <Button 
+          onClick={() => {
+            if (profileCompletion < 70) {
+              toast.error("Please complete your profile first (at least 70%)", {
+                description: "You need to fill your profile information before adding medicines.",
+                duration: 5000,
+              });
+              navigate("/profile");
+            } else {
+              setShowMapModal(true);
+            }
+          }}
+          disabled={profileCompletion < 70}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Medicine
         </Button>

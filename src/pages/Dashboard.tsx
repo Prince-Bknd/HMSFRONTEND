@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Plus,
+  Stethoscope,
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -33,11 +34,18 @@ export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
+    // Redirect admin users to admin dashboard
+    const normalizedRole = user?.role?.toLowerCase() || "";
+    if (normalizedRole === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+      return;
+    }
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [user, navigate]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -68,10 +76,10 @@ export default function Dashboard() {
             { label: "Prescriptions", value: "24", icon: Pill, color: "text-purple-600" },
           ],
           quickActions: [
-            { label: "Manage Schedule", icon: Calendar, color: "bg-blue-500", path: "/schedules" },
-            { label: "View Appointments", icon: Users, color: "bg-green-500", path: "/appointments" },
-            { label: "My Profile", icon: FileText, color: "bg-purple-500", path: "/profile" },
-            { label: "Medical Records", icon: ClipboardList, color: "bg-indigo-500", path: "/dashboard" },
+            { label: "Manage Schedule", icon: Calendar, color: "bg-blue-600 hover:bg-blue-700", path: "/schedules" },
+            { label: "View Appointments", icon: Users, color: "bg-emerald-600 hover:bg-emerald-700", path: "/appointments" },
+            { label: "My Profile", icon: FileText, color: "bg-slate-600 hover:bg-slate-700", path: "/profile" },
+            { label: "Medical Records", icon: ClipboardList, color: "bg-slate-600 hover:bg-slate-700", path: "/dashboard" },
           ],
           recentActivity: [
             { type: "Appointment", description: "Patient John Doe - 10:00 AM", status: "upcoming" },
@@ -93,10 +101,10 @@ export default function Dashboard() {
             { label: "Monthly Sales", value: "$45.2K", icon: TrendingUp, color: "text-green-600" },
           ],
           quickActions: [
-            { label: "Manage Medicines", icon: Plus, color: "bg-blue-500", path: "/medicines" },
-            { label: "My Profile", icon: Package, color: "bg-green-500", path: "/profile" },
-            { label: "Orders", icon: ShoppingCart, color: "bg-orange-500", path: "/dashboard" },
-            { label: "Analytics", icon: BarChart3, color: "bg-purple-500", path: "/dashboard" },
+            { label: "Manage Medicines", icon: Plus, color: "bg-blue-600 hover:bg-blue-700", path: "/medicines" },
+            { label: "My Profile", icon: Package, color: "bg-emerald-600 hover:bg-emerald-700", path: "/profile" },
+            { label: "Orders", icon: ShoppingCart, color: "bg-slate-600 hover:bg-slate-700", path: "/dashboard" },
+            { label: "Analytics", icon: BarChart3, color: "bg-slate-600 hover:bg-slate-700", path: "/dashboard" },
           ],
           recentActivity: [
             { type: "Order", description: "Order #5678 - Delivered", status: "completed" },
@@ -118,10 +126,10 @@ export default function Dashboard() {
             { label: "Health Score", value: "92%", icon: Activity, color: "text-emerald-600" },
           ],
           quickActions: [
-            { label: "Book Appointment", icon: Calendar, color: "bg-blue-500", path: "/appointments" },
-            { label: "View Records", icon: FileText, color: "bg-green-500", path: "/dashboard" },
-            { label: "My Prescriptions", icon: Pill, color: "bg-purple-500", path: "/dashboard" },
-            { label: "My Profile", icon: Activity, color: "bg-indigo-500", path: "/profile" },
+            { label: "Book Appointment", icon: Calendar, color: "bg-blue-600 hover:bg-blue-700", path: "/appointments" },
+            { label: "View Records", icon: FileText, color: "bg-emerald-600 hover:bg-emerald-700", path: "/dashboard" },
+            { label: "My Prescriptions", icon: Pill, color: "bg-slate-600 hover:bg-slate-700", path: "/dashboard" },
+            { label: "My Profile", icon: Activity, color: "bg-slate-600 hover:bg-slate-700", path: "/profile" },
           ],
           recentActivity: [
             { type: "Appointment", description: "Dr. Smith - Tomorrow 2:00 PM", status: "upcoming" },
@@ -136,12 +144,23 @@ export default function Dashboard() {
   const RoleIcon = config.icon;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-card/80">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
+              <div 
+                className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => navigate("/")}
+                title="Go to Home"
+              >
+                <div className="bg-primary p-2 rounded-lg">
+                  <Stethoscope className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <span className="text-lg font-bold text-foreground">HMS</span>
+              </div>
+              <div className="border-l border-border h-8 mx-2"></div>
               <div className={`${config.bgColor} p-2 rounded-lg`}>
                 <RoleIcon className={`h-6 w-6 ${config.color}`} />
               </div>
@@ -204,7 +223,7 @@ export default function Dashboard() {
           {config.stats.map((stat, index) => {
             const StatIcon = stat.icon;
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow border-2 hover:border-primary/50">
+              <Card key={index} className="hover:shadow-lg transition-shadow border hover:border-primary/30">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {stat.label}
