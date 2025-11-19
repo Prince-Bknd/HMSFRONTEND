@@ -169,7 +169,11 @@ export default function Register() {
           
           <CardHeader className="space-y-1 text-center relative z-10">
             <div className="flex items-center justify-center mb-6">
-              <div className="flex items-center space-x-2 group">
+              <div 
+                className="flex items-center space-x-2 group cursor-pointer"
+                onClick={() => navigate("/")}
+                title="Go to Home"
+              >
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 rounded-lg shadow-md group-hover:scale-110 transition-transform duration-300">
                   <Stethoscope className="h-6 w-6 text-white" />
                 </div>

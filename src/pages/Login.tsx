@@ -71,7 +71,11 @@ export default function Login() {
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-12 items-center">
         {/* Left Side - Branding */}
         <div className={`hidden md:block space-y-8 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <div className="flex items-center space-x-3 group">
+            <div 
+              className="flex items-center space-x-3 group cursor-pointer"
+              onClick={() => navigate("/")}
+              title="Go to Home"
+            >
               <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300 gentle-bounce">
                 <Stethoscope className="h-8 w-8 text-white" />
               </div>

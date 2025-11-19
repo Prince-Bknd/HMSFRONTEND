@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/redux/store/hooks";
 import api from "@/utils/api";
 import { toast } from "sonner";
@@ -6,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Plus, Trash2, Clock, X } from "lucide-react";
+import { Calendar, Plus, Trash2, Clock, X, AlertTriangle } from "lucide-react";
 
 interface Schedule {
   id: number;
@@ -21,10 +22,12 @@ interface Schedule {
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default function ScheduleManagement() {
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profileCompletion, setProfileCompletion] = useState<number>(0);
   const [formData, setFormData] = useState({
     dayOfWeek: "",
     startTime: "",
@@ -34,8 +37,19 @@ export default function ScheduleManagement() {
   });
 
   useEffect(() => {
+    checkProfileCompletion();
     loadSchedules();
   }, []);
+
+  const checkProfileCompletion = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await api.get(`/profiles/user/${user.id}/completion`);
+      setProfileCompletion(response.data.completion || 0);
+    } catch (error) {
+      setProfileCompletion(0);
+    }
+  };
 
   const loadSchedules = async () => {
     if (!user?.id) return;
@@ -48,6 +62,15 @@ export default function ScheduleManagement() {
   };
 
   const handleAddSchedule = async () => {
+    if (profileCompletion < 70) {
+      toast.error("Please complete your profile first (at least 70%)", {
+        description: "You need to fill your profile information before adding appointment times.",
+        duration: 5000,
+      });
+      navigate("/profile");
+      return;
+    }
+
     if (!formData.dayOfWeek || !formData.startTime || !formData.endTime) {
       toast.error("Please fill all required fields");
       return;
@@ -106,12 +129,51 @@ export default function ScheduleManagement() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {profileCompletion < 70 && (
+        <Card className="mb-6 border-orange-200 dark:border-orange-900 bg-orange-50/50 dark:bg-orange-900/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-1">
+                  Profile Incomplete
+                </h3>
+                <p className="text-sm text-orange-800 dark:text-orange-200 mb-3">
+                  Your profile is only {profileCompletion}% complete. Please complete at least 70% of your profile to add appointment schedules.
+                </p>
+                <Button 
+                  onClick={() => navigate("/profile")}
+                  variant="outline"
+                  size="sm"
+                  className="border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-900/30"
+                >
+                  Complete Profile
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Schedule Management</h1>
           <p className="text-muted-foreground">Manage your availability for appointments</p>
         </div>
-        <Button onClick={() => setShowAddModal(true)}>
+        <Button 
+          onClick={() => {
+            if (profileCompletion < 70) {
+              toast.error("Please complete your profile first (at least 70%)", {
+                description: "You need to fill your profile information before adding appointment times.",
+                duration: 5000,
+              });
+              navigate("/profile");
+            } else {
+              setShowAddModal(true);
+            }
+          }}
+          disabled={profileCompletion < 70}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Schedule
         </Button>
